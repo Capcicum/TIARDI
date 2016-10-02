@@ -43,11 +43,11 @@ u_int64 SocketStream::send(std::string msg)
 
 u_int64 SocketStream::receive(std::string& msg)
 {
-	u_int64 result = 0;
+	int64 result = 0;
 	const unsigned int MAX_BUF_LENGTH = 4096;
 	std::vector<char> buffer(MAX_BUF_LENGTH);
 	do {
-		result = recv(socket, buffer.data(), buffer.length(), 0);
+		result = recv(socket, buffer.data(), buffer.size(), 0);
 	    // append string from buffer.
 	    if ( result == -1 ) {
 	        // error
@@ -55,6 +55,7 @@ u_int64 SocketStream::receive(std::string& msg)
 	        msg.append( buffer.cbegin(), buffer.cend() );
 	    }
 	} while ( result == MAX_BUF_LENGTH );
+	return 0;
 }
 
 }}
