@@ -34,28 +34,67 @@ Socket_t SocketStream::getSocket()
 	return socket;
 }
 
-u_int64 SocketStream::send(std::string msg)
+SocketStream::SocketStreamError SocketStream::send(std::string msg)
 {
-	u_int64 result = 0;
-	result = ::send(socket, msg.c_str(), msg.size(), 0);
+	int64 sendSize = 0;
+	SocketStream::SocketStreamError result = SOCKETOK;
+	sendSize = ::send(socket, msg.c_str(), msg.size(), 0);
+	if(sendSize == SOCKET_ERROR)
+		result = getError();
 	return result;
 }
 
-u_int64 SocketStream::receive(std::string& msg)
+SocketStream::SocketStreamError SocketStream::receive(std::string& msg)
 {
-	int64 result = 0;
-	const unsigned int MAX_BUF_LENGTH = 4096;
-	std::vector<char> buffer(MAX_BUF_LENGTH);
+	int64 recvSize = 0;
+	SocketStream::SocketStreamError result = SOCKETOK;
+	bool readMore = true;
 	do {
-		result = recv(socket, buffer.data(), buffer.size(), 0);
-	    // append string from buffer.
-	    if ( result == -1 ) {
-	        // error
-	    } else {
-	        msg.append( buffer.cbegin(), buffer.cend() );
+		char singleChar = 0;
+		recvSize = recv(socket, &singleChar, 1, 0);
+	    if(recvSize != INVALID_SOCKET && recvSize != SOCKET_ERROR)
+	    {
+	    	if(singleChar == '\n')
+	    		readMore = false;
+	    	else
+	    		msg += singleChar;
 	    }
-	} while ( result == MAX_BUF_LENGTH );
-	return 0;
+	    else
+	    {
+	    	result = getError();
+	    }
+		} while ( readMore );
+	return result;
+}
+
+SocketStream::SocketStreamError SocketStream::getError()
+{
+	int16 error = 0;
+	SocketStream::SocketStreamError result;
+
+	error = WSAGetLastError();
+
+	switch(error)
+	{
+	case WSAENOTCONN:
+		result = SOCKETNOTCONNECTED;
+		break;
+	case WSAENETDOWN:
+		result = SOCKETNETDOWN;
+		break;
+	case WSAESHUTDOWN:
+		result = SOCKETSHUTDOWN;
+		break;
+	case WSAEHOSTUNREACH:
+		result = SOCKETHOSTUNREACH;
+		break;
+	case WSAETIMEDOUT:
+		result = SOCKETTIMEDOUT;
+		break;
+	default:
+		result = SOCKETERROR;
+	}
+	return result;
 }
 
 }}

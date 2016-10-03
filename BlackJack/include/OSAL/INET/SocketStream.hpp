@@ -16,13 +16,27 @@ namespace INET {
 class SocketStream
 {
 public:
+
+	enum SocketStreamError
+	{
+		SOCKETOK = 0,
+		SOCKETNOTCONNECTED,
+		SOCKETNETDOWN,
+		SOCKETSHUTDOWN,
+		SOCKETHOSTUNREACH,
+		SOCKETTIMEDOUT,
+		SOCKETERROR
+
+	};
+
 	SocketStream();
 	SocketStream(Socket_t sock);
 	~SocketStream();
 	void setSocket(Socket_t sock);
 	Socket_t getSocket();
-	u_int64 send(std::string msg);
-	u_int64 receive(std::string& msg);
+	SocketStreamError send(std::string msg);
+	SocketStreamError receive(std::string& msg);
+	SocketStreamError getError();
 private:
 	Socket_t socket;
 
