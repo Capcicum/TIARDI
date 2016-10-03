@@ -25,8 +25,9 @@ typedef signed long long int64;
 #include <ws2tcpip.h>
 #include <stdlib.h>
 
-typedef sockaddr_in sockAddr;
-typedef SOCKET Socket_t;
+typedef sockaddr_in sockaddrIn_t;
+typedef sockaddr sockaddr_t;
+typedef SOCKET socket_t;
 
 #endif
 

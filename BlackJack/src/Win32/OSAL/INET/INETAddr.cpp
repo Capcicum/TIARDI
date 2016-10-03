@@ -22,6 +22,8 @@ namespace INET {
 
 	u_int32 INETAddr::getIPAddr() const {return sockaddr.sin_addr.s_addr;}
 
+	//sockaddr_t* getSocketAddr() const {/*return reinterpret_cast <sockaddr_t *>(&sockaddr);*/}
+
 	u_int64 INETAddr::getSize() const {return sizeof (sockaddr);}
 
 }}

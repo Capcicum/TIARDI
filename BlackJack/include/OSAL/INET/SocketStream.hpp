@@ -30,15 +30,15 @@ public:
 	};
 
 	SocketStream();
-	SocketStream(Socket_t sock);
+	SocketStream(socket_t sock);
 	~SocketStream();
-	void setSocket(Socket_t sock);
-	Socket_t getSocket();
+	void setSocket(socket_t sock);
+	socket_t getSocket();
 	SocketStreamError send(std::string msg);
 	SocketStreamError receive(std::string& msg);
 	SocketStreamError getError();
 private:
-	Socket_t socket;
+	socket_t socket;
 
 };
 

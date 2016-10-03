@@ -6,7 +6,6 @@
  */
 
 #include <OSAL/INET/SocketStream.hpp>
-#include <vector>
 
 namespace OSAL {
 namespace INET {
@@ -15,7 +14,7 @@ SocketStream::SocketStream() :
 socket(INVALID_SOCKET)
 {}
 
-SocketStream::SocketStream(Socket_t sock) :
+SocketStream::SocketStream(socket_t sock) :
 socket(sock)
 {}
 
@@ -24,12 +23,12 @@ SocketStream::~SocketStream()
 	closesocket(socket);
 }
 
-void SocketStream::setSocket(Socket_t sock)
+void SocketStream::setSocket(socket_t sock)
 {
 	socket = sock;
 }
 
-Socket_t SocketStream::getSocket()
+socket_t SocketStream::getSocket()
 {
 	return socket;
 }
