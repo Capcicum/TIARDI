@@ -10,21 +10,27 @@
 namespace OSAL {
 namespace INET {
 
-SocketAcceptor::SocketAcceptor()
+SocketAcceptor::SocketAcceptor() :
+socket(INVALID_SOCKET)
 {
 
 }
 
-SocketAcceptor::SocketAcceptor(const INETAddr &addr)
+SocketAcceptor::SocketAcceptor(const INETAddr &addr) :
+socket(INVALID_SOCKET)
 {
-
+	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
+	result = createSocket();
+	if(result == SOCKACCOK)
+		result = bind(addr);
+	if(result == SOCKACCOK)
+		result = listen();
 }
 
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::createSocket()
 {
-	int iResult;
 	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
-	//socket = socket(PF_INET, SOCK_STREAM, 0);
+	socket = ::socket(PF_INET, SOCK_STREAM, 0);
 	if(socket == INVALID_SOCKET)
 	{
 		result = getError();
@@ -39,10 +45,9 @@ void SocketAcceptor::closeSocket()
 
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::bind(const INETAddr &addr)
 {
-	int iResult;
+	int iResult = 0;
 	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
-	/*iResult = ::bind(socket, addr.getSocketAddr(), addr.getSize());
-	sockaddr_t t = addr.getSocketAddr();*/
+	iResult = ::bind(socket, addr.getSocketAddr(), addr.getSize());
 	if(iResult == SOCKET_ERROR)
 	{
 		result = getError();
@@ -65,14 +70,18 @@ SocketAcceptor::SocketAcceptorReturn SocketAcceptor::listen()
 
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::open(CONST INETAddr &sock_addr)
 {
-	int iResult;
+
 	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
+	result = createSocket();
+	if(result == SOCKACCOK)
+		result = bind(sock_addr);
+	if(result == SOCKACCOK)
+		result = listen();
 	return result;
 }
 
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::accept(SocketStream &s)
 {
-	int iResult;
 	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
 	socket_t sock;
 	sock = ::accept(socket, NULL, NULL);

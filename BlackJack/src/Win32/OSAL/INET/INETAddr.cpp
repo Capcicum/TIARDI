@@ -18,12 +18,24 @@ namespace INET {
 		sockaddr.sin_port = htons(port);
 	}
 
-	u_int16 INETAddr::getPort() const {return sockaddr.sin_port;}
+	u_int16 INETAddr::getPort() const
+	{
+		return sockaddr.sin_port;
+	}
 
-	u_int32 INETAddr::getIPAddr() const {return sockaddr.sin_addr.s_addr;}
+	u_int32 INETAddr::getIPAddr() const
+	{
+		return sockaddr.sin_addr.s_addr;
+	}
 
-	//sockaddr_t* getSocketAddr() const {/*return reinterpret_cast <sockaddr_t *>(&sockaddr);*/}
+	sockaddr_t* INETAddr::getSocketAddr() const
+	{
+		return (sockaddr_t*)&sockaddr;
+	}
 
-	u_int64 INETAddr::getSize() const {return sizeof (sockaddr);}
+	u_int64 INETAddr::getSize() const
+	{
+		return sizeof (sockaddr);
+	}
 
 }}

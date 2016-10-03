@@ -23,7 +23,7 @@ public:
 
 	u_int64 getSize() const;
 
-	sockaddr_t getSocketAddr();
+	sockaddr_t* getSocketAddr() const;
 
 private:
 	sockaddrIn_t sockaddr;
