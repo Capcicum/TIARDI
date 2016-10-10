@@ -15,18 +15,44 @@
 namespace EventHandle {
 namespace AccConn {
 
-template <class IPC_STREAM>
+template <class IPCSTREAM>
 class ServiceHandler : public Reactor::EventHandler
 {
 public:
 	virtual void open()=0;
-	IPC_STREAM& peer();
+	IPCSTREAM& peer();
 	std::string remoteAddr();
 	void setHandle(handle h);
+	virtual handle getHandle() const;
 
-private:
-	IPC_STREAM stream;
+protected:
+	IPCSTREAM stream;
 };
+
+
+template <class IPCSTREAM>
+IPCSTREAM& ServiceHandler<IPCSTREAM>::peer()
+{
+	return stream;
+}
+
+template <class IPCSTREAM>
+std::string ServiceHandler<IPCSTREAM>::remoteAddr()
+{
+	return "hej";
+}
+
+template <class IPCSTREAM>
+void ServiceHandler<IPCSTREAM>::setHandle(handle h)
+{
+	stream.setHandle(h);
+}
+
+template <class IPCSTREAM>
+handle ServiceHandler<IPCSTREAM>::getHandle() const
+{
+	return stream.getHandle();
+}
 
 }
 }

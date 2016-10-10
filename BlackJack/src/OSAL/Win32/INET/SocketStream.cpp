@@ -29,7 +29,7 @@ void SocketStream::setSocket(socket_t sock)
 	socket = sock;
 }
 
-socket_t SocketStream::getSocket()
+handle SocketStream::getHandle() const
 {
 	return socket;
 }

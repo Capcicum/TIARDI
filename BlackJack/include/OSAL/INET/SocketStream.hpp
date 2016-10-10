@@ -33,7 +33,7 @@ public:
 	explicit SocketStream(socket_t sock);
 	~SocketStream();
 	void setSocket(socket_t sock);
-	socket_t getSocket();
+	handle getHandle() const;
 	SocketStreamError send(std::string msg);
 	SocketStreamError receive(std::string& msg);
 	SocketStreamError getError();

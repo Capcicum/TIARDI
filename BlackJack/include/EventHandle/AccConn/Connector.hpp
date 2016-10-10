@@ -25,11 +25,26 @@ protected:
 	virtual void connectServiceHandler(SERVICEHANDLER *sh, const Addr &addr);
 	virtual void registerServiceHandler(SERVICEHANDLER* sh);
 	virtual void activateServiceHandler(SERVICEHANDLER* sh);
-	virtual void complete(handle h);
-	virtual void handleEvent(handle h, Reactor::EventType et);
 private:
-	IPCCONNECTOR acceptor;
+	Reactor::Reactor* reactor;
+	IPCCONNECTOR connector;
 };
+
+template<class SERVICEHANDLER, class IPCCONNECTOR>
+Connector<SERVICEHANDLER,IPCCONNECTOR>::Connector(Reactor::Reactor* r) :
+	reactor(r)
+{
+
+}
+
+template<class SERVICEHANDLER, class IPCCONNECTOR>
+void Connector<SERVICEHANDLER,IPCCONNECTOR>::connect(SERVICEHANDLER *sh, const Addr &remoteAddr)
+{
+	connectServiceHandler(sh, remoteAddr);
+	registerServiceHandler(sh);
+	activateServiceHandler(sh);
+
+}
 
 }
 }

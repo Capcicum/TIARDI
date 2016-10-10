@@ -11,22 +11,28 @@
 namespace EventHandle {
 namespace AccConn {
 
-template <class IPC_STREAM>
-IPC_STREAM& ServiceHandler<IPC_STREAM>::peer()
+template <class IPCSTREAM>
+IPCSTREAM& ServiceHandler<IPCSTREAM>::peer()
 {
 	return stream;
 }
 
-template <class IPC_STREAM>
-std::string ServiceHandler<IPC_STREAM>::remoteAddr()
+template <class IPCSTREAM>
+std::string ServiceHandler<IPCSTREAM>::remoteAddr()
 {
 
 }
 
-template <class IPC_STREAM>
-void ServiceHandler<IPC_STREAM>::setHandle(handle h)
+template <class IPCSTREAM>
+void ServiceHandler<IPCSTREAM>::setHandle(handle h)
 {
 	stream.setHandle(h);
+}
+
+template <class IPCSTREAM>
+handle ServiceHandler<IPCSTREAM>::getHandle() const
+{
+	return stream.getHandle();
 }
 
 

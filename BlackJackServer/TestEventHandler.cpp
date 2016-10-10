@@ -31,7 +31,7 @@ void TestEventHandler::handleEvent(handle handle, EventType et)
 
 handle TestEventHandler::getHandle() const
 {
-	return stream->getSocket();
+	return stream->getHandle();
 }
 
 }}

@@ -27,6 +27,7 @@ public:
 	SocketAcceptor(const PEERADDR &addr);
 	SocketAcceptorReturn createSocket();
 	void closeSocket();
+	handle getHandle() const;
 	SocketAcceptorReturn bind(const PEERADDR &addr);
 	SocketAcceptorReturn listen();
 	SocketAcceptorReturn open(CONST PEERADDR &sock_addr);

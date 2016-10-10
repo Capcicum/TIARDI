@@ -11,10 +11,11 @@ namespace EventHandle {
 namespace AccConn {
 
 template<class SERVICEHANDLER, class IPCACCEPTOR>
-Acceptor<SERVICEHANDLER,IPCACCEPTOR>::Acceptor(const Addr& localAddr, Reactor::Reactor* r)
+Acceptor<SERVICEHANDLER,IPCACCEPTOR>::Acceptor(const Addr& localAddr, Reactor::Reactor* r) :
+	reactor(r)
 {
 	acceptor.open(localAddr);
-	r->registerHandler(this, Reactor::ACCEPT_EVENT);
+	reactor->registerHandler(this, Reactor::ACCEPT_EVENT);
 }
 
 template<class SERVICEHANDLER, class IPCACCEPTOR>

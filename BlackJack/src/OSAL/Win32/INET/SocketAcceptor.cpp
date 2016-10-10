@@ -68,6 +68,11 @@ SocketAcceptor::SocketAcceptorReturn SocketAcceptor::listen()
 	return result;
 }
 
+handle SocketAcceptor::getHandle() const
+{
+	return socket;
+}
+
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::open(CONST INETAddr &sock_addr)
 {
 

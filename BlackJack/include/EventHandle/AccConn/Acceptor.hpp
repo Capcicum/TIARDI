@@ -22,14 +22,33 @@ public:
 	Acceptor(const Addr& localAddr, Reactor::Reactor* r);
 	virtual void accept();
 protected:
-	virtual SERVICEHANDLER* makeServiceHandler();
-	virtual void acceptServiceHandler(SERVICEHANDLER* sh);
-	virtual void activateServiceHandler(SERVICEHANDLER* sh);
+	virtual SERVICEHANDLER* makeServiceHandler() = 0;
+	virtual void acceptServiceHandler(SERVICEHANDLER* sh) = 0;
+	virtual void activateServiceHandler(SERVICEHANDLER* sh) = 0;
 	virtual handle getHandle() const;
-	virtual void handleEvent(handle h, Reactor::EventType et);
-private:
+	virtual void handleEvent(handle h, Reactor::EventType et) = 0;
 	IPCACCEPTOR acceptor;
+	Reactor::Reactor* reactor;
+
 };
+
+template<class SERVICEHANDLER, class IPCACCEPTOR>
+Acceptor<SERVICEHANDLER,IPCACCEPTOR>::Acceptor(const Addr& localAddr, Reactor::Reactor* r) :
+	reactor(r)
+{
+	acceptor.open(localAddr);
+	reactor->registerHandler(this, Reactor::ACCEPT_EVENT);
+}
+
+template<class SERVICEHANDLER, class IPCACCEPTOR>
+void Acceptor<SERVICEHANDLER,IPCACCEPTOR>::accept()
+{
+	SERVICEHANDLER* serviceHandler = makeServiceHandler();
+
+	acceptServiceHandler(serviceHandler);
+
+	activateServiceHandler(serviceHandler);
+}
 
 }
 }
