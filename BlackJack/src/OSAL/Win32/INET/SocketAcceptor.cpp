@@ -87,6 +87,7 @@ SocketAcceptor::SocketAcceptorReturn SocketAcceptor::accept(SocketStream &s)
 	sock = ::accept(socket, NULL, NULL);
 	if(sock == INVALID_SOCKET)
 	{
+
 		result = getError();
 		closeSocket();
 	}

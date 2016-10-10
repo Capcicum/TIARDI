@@ -30,7 +30,7 @@ public:
 	};
 
 	SocketStream();
-	SocketStream(socket_t sock);
+	explicit SocketStream(socket_t sock);
 	~SocketStream();
 	void setSocket(socket_t sock);
 	socket_t getSocket();

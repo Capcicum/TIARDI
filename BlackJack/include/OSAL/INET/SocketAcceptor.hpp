@@ -17,18 +17,19 @@ namespace INET {
 
 class SocketAcceptor {
 public:
+	typedef INETAddr PEERADDR;
 	enum SocketAcceptorReturn
 	{
 		SOCKACCOK = 0,
 		SOCKACCERROR
 	};
 	SocketAcceptor();
-	SocketAcceptor(const INETAddr &addr);
+	SocketAcceptor(const PEERADDR &addr);
 	SocketAcceptorReturn createSocket();
 	void closeSocket();
-	SocketAcceptorReturn bind(const INETAddr &addr);
+	SocketAcceptorReturn bind(const PEERADDR &addr);
 	SocketAcceptorReturn listen();
-	SocketAcceptorReturn open(CONST INETAddr &sock_addr);
+	SocketAcceptorReturn open(CONST PEERADDR &sock_addr);
 	SocketAcceptorReturn accept(SocketStream &s);
 	SocketAcceptorReturn getError();
 private:

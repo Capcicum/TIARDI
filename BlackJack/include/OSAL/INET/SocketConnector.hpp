@@ -18,6 +18,7 @@ namespace INET {
 class SocketConnector
 {
 public:
+	typedef INETAddr PEERADDR;
 	enum SocketConnectorReturn
 	{
 		SOCKCONOK = 0,

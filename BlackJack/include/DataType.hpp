@@ -16,6 +16,7 @@ typedef unsigned long u_int32;
 typedef signed long int32;
 typedef unsigned long long u_int64;
 typedef signed long long int64;
+typedef signed long long lala;
 
 #ifdef WIN
 
@@ -24,10 +25,15 @@ typedef signed long long int64;
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
+#include <iostream>
+#include <WinNT.h>
+#include <ctime>
+#include <sys/time.h>
 
 typedef sockaddr_in sockaddrIn_t;
 typedef sockaddr sockaddr_t;
 typedef SOCKET socket_t;
+typedef unsigned int handle;
 
 #endif
 

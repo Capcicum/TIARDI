@@ -6,6 +6,7 @@
  */
 
 #include <OSAL/INET/SocketStream.hpp>
+#include <iostream>
 
 namespace OSAL {
 namespace INET {
@@ -45,24 +46,26 @@ SocketStream::SocketStreamError SocketStream::send(std::string msg)
 
 SocketStream::SocketStreamError SocketStream::receive(std::string& msg)
 {
-	int64 recvSize = 0;
+	int64 recvSize;
 	SocketStream::SocketStreamError result = SOCKETOK;
-	bool readMore = true;
-	do {
-		char singleChar = 0;
-		recvSize = recv(socket, &singleChar, 1, 0);
-	    if(recvSize != INVALID_SOCKET && recvSize != SOCKET_ERROR)
-	    {
-	    	if(singleChar == '\n')
-	    		readMore = false;
-	    	else
-	    		msg += singleChar;
-	    }
-	    else
-	    {
-	    	result = getError();
-	    }
-		} while ( readMore );
+	char buffer[1024];
+
+	recvSize = recv(socket, buffer, sizeof(buffer), 0);
+	if(recvSize != INVALID_SOCKET || recvSize != SOCKET_ERROR)
+	{
+		if(recvSize > 0)
+		{
+			msg.append(buffer, recvSize);
+		}
+		else
+		{
+			result = SocketStream::SOCKETNOTCONNECTED;
+		}
+	}
+	else
+	{
+		result = getError();
+	}
 	return result;
 }
 

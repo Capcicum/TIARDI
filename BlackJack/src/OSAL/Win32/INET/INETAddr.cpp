@@ -14,7 +14,7 @@ namespace INET {
 	{
 		memset(&sockaddr, 0, sizeof sockaddr);
 		sockaddr.sin_family = AF_INET;
-		sockaddr.sin_addr.s_addr = htonl(addr);
+		sockaddr.sin_addr.s_addr = addr;
 		sockaddr.sin_port = htons(port);
 	}
 
