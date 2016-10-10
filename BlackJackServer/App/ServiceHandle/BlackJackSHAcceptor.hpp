@@ -19,35 +19,20 @@ namespace ServiceHandle {
 class BlackJackSHAcceptor : public EventHandle::AccConn::Acceptor<BlackJackServiceHandler, OSAL::INET::SocketAcceptor>
 {
 public:
-	using EventHandle::AccConn::Acceptor<BlackJackServiceHandler, OSAL::INET::SocketAcceptor>::Acceptor;
 
-	BlackJackServiceHandler* makeServiceHandler()
-	{
-		BlackJackServiceHandler* serviceHandler = new BlackJackServiceHandler();
-		return serviceHandler;
-	}
+	typedef typename OSAL::INET::SocketAcceptor::PEERADDR Addr;
 
-	void acceptServiceHandler(BlackJackServiceHandler* sh)
-	{
-		acceptor.accept(sh->peer());
-	}
+	BlackJackSHAcceptor(const Addr& localAddr, EventHandle::Reactor::Reactor* r);
 
-	void activateServiceHandler(BlackJackServiceHandler* sh)
-	{
-		reactor->registerHandler(sh, EventHandle::Reactor::READ_EVENT);
-		sh->open();
-	}
+	BlackJackServiceHandler* makeServiceHandler();
 
-	handle getHandle() const
-	{
-		return acceptor.getHandle();
-	}
+	void acceptServiceHandler(BlackJackServiceHandler* sh);
 
-	void handleEvent(handle h, EventHandle::Reactor::EventType et)
-	{
-		accept();
-	}
+	void activateServiceHandler(BlackJackServiceHandler* sh);
 
+	handle getHandle() const;
+
+	void handleEvent(handle h, EventHandle::Reactor::EventType et);
 private:
 
 };

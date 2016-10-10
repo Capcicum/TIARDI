@@ -20,39 +20,32 @@ class ServiceHandler : public Reactor::EventHandler
 {
 public:
 	virtual void open()=0;
-	IPCSTREAM& peer();
-	std::string remoteAddr();
-	void setHandle(handle h);
-	virtual handle getHandle() const;
+
+	IPCSTREAM& peer()
+	{
+		return stream;
+	}
+
+	std::string remoteAddr()
+	{
+		return "hej";
+	}
+
+	void setHandle(handle h)
+	{
+		stream.setHandle(h);
+	}
+
+	handle getHandle() const
+	{
+		return stream.getHandle();
+	}
 
 protected:
 	IPCSTREAM stream;
 };
 
 
-template <class IPCSTREAM>
-IPCSTREAM& ServiceHandler<IPCSTREAM>::peer()
-{
-	return stream;
-}
-
-template <class IPCSTREAM>
-std::string ServiceHandler<IPCSTREAM>::remoteAddr()
-{
-	return "hej";
-}
-
-template <class IPCSTREAM>
-void ServiceHandler<IPCSTREAM>::setHandle(handle h)
-{
-	stream.setHandle(h);
-}
-
-template <class IPCSTREAM>
-handle ServiceHandler<IPCSTREAM>::getHandle() const
-{
-	return stream.getHandle();
-}
 
 }
 }

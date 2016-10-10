@@ -10,6 +10,8 @@
 
 #include <EventHandle/Reactor/EventHandler.hpp>
 #include <EventHandle/Reactor/Reactor.hpp>
+#include <OSAL/INET/INETAddr.hpp>
+#include <OSAL/INET/SocketAcceptor.hpp>
 
 namespace EventHandle {
 namespace AccConn {
@@ -19,36 +21,34 @@ class Acceptor : public Reactor::EventHandler
 {
 public:
 	typedef typename IPCACCEPTOR::PEERADDR Addr;
-	Acceptor(const Addr& localAddr, Reactor::Reactor* r);
-	virtual void accept();
+
+	Acceptor(const Addr& localAddr, Reactor::Reactor* r) :
+		reactor(r)
+	{
+		std::cout << "from acceptor" << std::endl;
+		acceptor.open(localAddr);
+		//reactor->registerHandler(this, Reactor::ACCEPT_EVENT);
+	}
+
+	virtual void accept()
+	{
+		SERVICEHANDLER* serviceHandler = makeServiceHandler();
+
+		acceptServiceHandler(serviceHandler);
+
+		activateServiceHandler(serviceHandler);
+	}
+
 protected:
 	virtual SERVICEHANDLER* makeServiceHandler() = 0;
 	virtual void acceptServiceHandler(SERVICEHANDLER* sh) = 0;
 	virtual void activateServiceHandler(SERVICEHANDLER* sh) = 0;
-	virtual handle getHandle() const;
 	virtual void handleEvent(handle h, Reactor::EventType et) = 0;
+
 	IPCACCEPTOR acceptor;
 	Reactor::Reactor* reactor;
 
 };
-
-template<class SERVICEHANDLER, class IPCACCEPTOR>
-Acceptor<SERVICEHANDLER,IPCACCEPTOR>::Acceptor(const Addr& localAddr, Reactor::Reactor* r) :
-	reactor(r)
-{
-	acceptor.open(localAddr);
-	reactor->registerHandler(this, Reactor::ACCEPT_EVENT);
-}
-
-template<class SERVICEHANDLER, class IPCACCEPTOR>
-void Acceptor<SERVICEHANDLER,IPCACCEPTOR>::accept()
-{
-	SERVICEHANDLER* serviceHandler = makeServiceHandler();
-
-	acceptServiceHandler(serviceHandler);
-
-	activateServiceHandler(serviceHandler);
-}
 
 }
 }

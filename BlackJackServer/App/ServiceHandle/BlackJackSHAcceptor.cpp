@@ -10,6 +10,11 @@
 namespace App {
 namespace ServiceHandle {
 
+	BlackJackSHAcceptor::BlackJackSHAcceptor(const Addr& localAddr, EventHandle::Reactor::Reactor* r) :
+			EventHandle::AccConn::Acceptor<BlackJackServiceHandler, OSAL::INET::SocketAcceptor>(localAddr, r)
+	{
+	}
+
 	BlackJackServiceHandler* BlackJackSHAcceptor::makeServiceHandler()
 	{
 		BlackJackServiceHandler* serviceHandler = new BlackJackServiceHandler();
@@ -18,9 +23,7 @@ namespace ServiceHandle {
 
 	void BlackJackSHAcceptor::acceptServiceHandler(BlackJackServiceHandler* sh)
 	{
-		OSAL::INET::SocketStream& s = sh->peer();
-		acceptor.accept(s);
-		//acceptor.accept(sh->peer());
+		acceptor.accept(sh->peer());
 	}
 
 	void BlackJackSHAcceptor::activateServiceHandler(BlackJackServiceHandler* sh)
@@ -31,12 +34,13 @@ namespace ServiceHandle {
 
 	handle BlackJackSHAcceptor::getHandle() const
 	{
-		//return acceptor.getHandle();
+		return acceptor.getHandle();
 	}
 
 	void BlackJackSHAcceptor::handleEvent(handle h, EventHandle::Reactor::EventType et)
 	{
-		//accept();
+		std::cout << "hej fro handle" << std::endl;
+		accept();
 	}
 
 }}
