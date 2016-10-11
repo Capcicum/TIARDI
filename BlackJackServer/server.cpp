@@ -49,12 +49,10 @@ int main()
 
 		reactor->registerHandler(eventHandler, EventHandle::Reactor::READ_EVENT);*/
 
-		std::cout << "hej" << std::endl;
-		std::cout << "hej" << std::endl;
 		App::ServiceHandle::BlackJackSHAcceptor* shAcceptor = new App::ServiceHandle::BlackJackSHAcceptor(*addr, reactor);
-		std::cout << "hej" << std::endl;
+
 		reactor->registerHandler(shAcceptor, EventHandle::Reactor::ACCEPT_EVENT);
-		std::cout << "hej" << std::endl;
+
 		while(true)
 		{
 			reactor->handleEvents();

@@ -19,14 +19,15 @@ Reactor::Reactor(OSAL::Demux::Demux *mux) :
 
 void Reactor::registerHandler(EventHandler *eh, EventType et)
 {
-	std::cout << "register1" << std::endl;
 	EventHS evhs = {eh, et};
-	std::cout << "register2" << std::endl;
 	handle h = eh->getHandle();
-	std::cout << "register3" << std::endl;
 	auto aSearch = table.find(h);
 	if(aSearch == table.end())
 		table[h] = evhs;
+	for(auto i= table.begin(); i != table.end(); i++)
+	{
+		std::cout << (i->first) << std::endl;
+	}
 }
 
 void Reactor::removeHandler(EventHandler *eh, EventType et)
@@ -59,7 +60,8 @@ void Reactor::handleEvents(int timeout)
 		}
 	}
 
-	demux->handle_events(readFds, writeFds, exceptFds, timeout);
+	int result = demux->handle_events(readFds, writeFds, exceptFds, timeout);
+	std::cout << result << std::endl;
 
 	for(auto iRead = readFds.begin(); iRead != readFds.end(); iRead++)
 	{

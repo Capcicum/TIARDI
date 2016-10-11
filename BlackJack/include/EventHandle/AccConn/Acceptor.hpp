@@ -27,11 +27,11 @@ public:
 	{
 		std::cout << "from acceptor" << std::endl;
 		acceptor.open(localAddr);
-		//reactor->registerHandler(this, Reactor::ACCEPT_EVENT);
 	}
 
 	virtual void accept()
 	{
+		std::cout << "accept connection" << std::endl;
 		SERVICEHANDLER* serviceHandler = makeServiceHandler();
 
 		acceptServiceHandler(serviceHandler);

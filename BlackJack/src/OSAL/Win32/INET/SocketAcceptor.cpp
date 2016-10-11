@@ -35,6 +35,8 @@ SocketAcceptor::SocketAcceptorReturn SocketAcceptor::createSocket()
 	{
 		result = getError();
 	}
+	/*unsigned long iMode = 1;
+	ioctlsocket(socket,FIONBIO,&iMode);*/
 	return result;
 }
 
