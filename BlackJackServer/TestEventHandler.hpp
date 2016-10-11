@@ -11,6 +11,7 @@
 #include <EventHandle/Reactor/EventHandler.hpp>
 #include <OSAL/INET/SocketStream.hpp>
 #include <DataType.hpp>
+#include <OSAL/INET/SocketAcceptor.hpp>
 
 namespace EventHandle {
 namespace Reactor {
@@ -18,14 +19,14 @@ namespace Reactor {
 class TestEventHandler : public EventHandle::Reactor::EventHandler
 {
 public:
-	TestEventHandler(OSAL::INET::SocketStream* stream);
+	TestEventHandler(OSAL::INET::SocketAcceptor* stream);
 
 	void handleEvent(handle handle, EventType et);
 
 	handle getHandle() const;
 
 private:
-	OSAL::INET::SocketStream* stream;
+	OSAL::INET::SocketAcceptor* stream;
 };
 
 }}

@@ -13,6 +13,9 @@
 #include "OSAL/Win32/INET/WSA.hpp"
 #include <DataType.hpp>
 #include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <cstdio>
 
 int main()
 {
@@ -21,7 +24,7 @@ int main()
 	{
 		OSAL::INET::SocketConnector* socketConnector = new OSAL::INET::SocketConnector();
 		OSAL::INET::SocketStream* socketStream = new OSAL::INET::SocketStream();
-		OSAL::INET::INETAddr* addr = new OSAL::INET::INETAddr(27015, inet_addr("127.0.0.1"));
+		OSAL::INET::INETAddr* addr = new OSAL::INET::INETAddr(27015, inet_addr("198.168.189.27"));
 
 		std::cout << "Initialised" << std::endl;
 		/*std::cout << socketStream->getSocket() << std::endl;
@@ -42,6 +45,14 @@ int main()
 			printf("connect failed with error: %d\n", WSAGetLastError());
 			std::cout << "error" << std::endl;
 		}
+		struct sockaddr_storage saddr;
+		socklen_t len = sizeof saddr;
+		getpeername(socketStream->getHandle(), (struct sockaddr*)&addr, &len);
+	    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+	    int port = ntohs(s->sin_port);
+
+	    printf("Peer IP address: %s\n", inet_ntoa(s->sin_addr));
+	    printf("Peer port      : %d\n", port);
 
 		while(true)
 		{

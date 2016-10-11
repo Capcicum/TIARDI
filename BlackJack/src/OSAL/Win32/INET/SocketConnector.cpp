@@ -48,7 +48,7 @@ SocketConnector::SocketConnectorReturn SocketConnector::connect(const INETAddr &
 
 SocketConnector::SocketConnectorReturn SocketConnector::getError()
 {
-	SocketConnector::SocketConnectorReturn result = SOCKCONOK;
+	SocketConnector::SocketConnectorReturn result = SOCKCONERROR;
 	return result;
 }
 

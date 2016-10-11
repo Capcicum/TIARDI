@@ -61,40 +61,46 @@ void Reactor::handleEvents(int timeout)
 	}
 
 	int result = demux->handle_events(readFds, writeFds, exceptFds, timeout);
-	std::cout << result << std::endl;
 
-	for(auto iRead = readFds.begin(); iRead != readFds.end(); iRead++)
+	if (result > 0)
 	{
-		std::cout <<"read"<<std::endl;
-		auto search = table.find(*iRead);
-		if(search != table.end())
-		{
-			search->second.evh->handleEvent(*iRead, EventHandle::Reactor::READ_EVENT);
+		for (auto iRead = readFds.begin(); iRead != readFds.end(); iRead++) {
+			std::cout << "read" << std::endl;
+			auto search = table.find(*iRead);
+			if (search != table.end()) {
+				search->second.evh->handleEvent(*iRead,
+						EventHandle::Reactor::READ_EVENT);
+			}
+		}
+
+		for (auto iWrite = writeFds.begin(); iWrite != writeFds.end();
+				iWrite++) {
+			std::cout << "write" << std::endl;
+
+			auto search = table.find(*iWrite);
+			if (search != table.end()) {
+				search->second.evh->handleEvent(*iWrite,
+						EventHandle::Reactor::WRITE_EVENT);
+			}
+		}
+
+		for (auto iExcept = exceptFds.begin(); iExcept != exceptFds.end();
+				iExcept++) {
+			std::cout << "except" << std::endl;
+
+			auto search = table.find(*iExcept);
+			if (search != table.end()) {
+				search->second.evh->handleEvent(*iExcept,
+						EventHandle::Reactor::CLOSE_EVENT);
+			}
 		}
 	}
-
-	for(auto iWrite = writeFds.begin(); iWrite != writeFds.end(); iWrite++)
+	else if (result < 0)
 	{
-		std::cout <<"write"<<std::endl;
-
-		auto search = table.find(*iWrite);
-		if(search != table.end())
-		{
-			search->second.evh->handleEvent(*iWrite, EventHandle::Reactor::WRITE_EVENT);
-		}
+		std::cout << "error" << std::endl;
+		std::string hej;
+		std::cin >> hej;
 	}
-
-	for(auto iExcept = exceptFds.begin(); iExcept != exceptFds.end(); iExcept++)
-	{
-		std::cout <<"except"<<std::endl;
-
-		auto search = table.find(*iExcept);
-		if(search != table.end())
-		{
-			search->second.evh->handleEvent(*iExcept, EventHandle::Reactor::CLOSE_EVENT);
-		}
-	}
-
 
 }
 
