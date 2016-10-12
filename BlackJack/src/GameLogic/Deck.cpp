@@ -5,6 +5,7 @@
  *      Author: Andersen
  */
 
+#include <time.h>
 
 #include <GameLogic/Deck.hpp>
 
@@ -39,6 +40,7 @@ namespace GameLogic {
 
 	void Deck::shuffleDeck()
 	{
+		std::srand(time(NULL));
 		std::random_shuffle(deck.begin(), deck.end());
 	}
 
@@ -53,7 +55,6 @@ namespace GameLogic {
 	{
 		return deck.size();
 	}
-
 
 }
 

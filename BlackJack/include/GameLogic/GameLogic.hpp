@@ -21,7 +21,7 @@ class GameLogic : Player {
 public:
 	GameLogic();
 	~GameLogic();
-	int addPlayer(Player player);
+	int addPlayer(Player* player);
 	std::string startGame(int id);
 	void checkForAce(int id);
 	std::string hit(int id);

@@ -12,7 +12,6 @@ namespace GameLogic{
 Card::Card(Rank r, Suit s) :
 		rank(r), suit(s)
 {
-
 }
 
 int Card::getValue()
@@ -23,6 +22,16 @@ int Card::getValue()
 		value = 10;
 	}
 	return value;
+}
+
+std::string Card::getCardName()
+{
+	int suitValue = suit;
+	int rankValue = rank;
+
+	std::string returnString = rankNames[rankValue-1] + " of " + suitNames[suitValue];
+
+	return returnString;
 }
 
 }

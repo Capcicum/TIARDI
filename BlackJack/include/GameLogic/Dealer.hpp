@@ -17,14 +17,13 @@ class Dealer
 {
 public:
 	Dealer();
-	void startGame();
-	void addNewPlayer();
-	void giveCard();
-	void deal();
-
+	void giveCard(Card* card);
+	int getCardsTotalValue();
+	bool getIsHitting();
+	void clear();
+	std::string getCardsName();
 private:
-	Deck* deck;
-	std::vector<Player*> players;
+	std::vector<Card*> cards;
 };
 
 }

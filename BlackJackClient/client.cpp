@@ -17,9 +17,44 @@
 #include <stdlib.h>
 #include <cstdio>
 
+#include <GameLogic/Table.hpp>
+#include <GameLogic/Card.hpp>
+
+using namespace GameLogic;
+
+class PlayerClass : public Player
+{
+public:
+	PlayerClass(Table* table, int money = 200) : Player(table, money){}
+	void update()
+	{
+		std::cout << table->getDealerCardsName() << std::endl;
+	}
+};
+
+
 int main()
 {
-	WSA wsa;
+
+	std::string in;
+	Table* table = new Table();
+	PlayerClass* player = new PlayerClass(table);
+	table->addNewPlayer(player);
+	player->bet(100);
+	std::cout << player->getCardsNames() << std::endl;
+
+	while (player->getIsHitting()) {
+		std::cin >> in;
+		if (in == "hit") {
+			player->hit();
+			std::cout << player->getCardsNames() << std::endl;
+		} else if (in == "stand") {
+			player->stand();
+		}
+	}
+
+
+	/*WSA wsa;
 	if(wsa.startUp() == WSA::WSAOK)
 	{
 		OSAL::INET::SocketConnector* socketConnector = new OSAL::INET::SocketConnector();
@@ -33,7 +68,7 @@ int main()
 		handle_t h = static_cast<handle_t>(&s);
 		socket_t *check = static_cast<socket_t*>(h);
 
-		std::cout << *check << std::endl;*/
+		std::cout << *check << std::endl;
 
 		std::cout << "connecting" << std::endl;
 		if(socketConnector->connect(*addr, *socketStream) == OSAL::INET::SocketConnector::SOCKCONOK)
@@ -70,6 +105,6 @@ int main()
 			}
 		}
 
-	}
+	}*/
 	return 0;
 }

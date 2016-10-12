@@ -10,17 +10,29 @@
 
 #include <EventHandle/AccConn/ServiceHandler.hpp>
 #include <OSAL/INET/SocketStream.hpp>
+#include <GameLogic/Player.hpp>
+#include <string>
 
 namespace App {
 namespace ServiceHandle {
 
-class BlackJackServiceHandler : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>
+class BlackJackServiceHandler : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>, GameLogic::Player
 {
 public:
-	BlackJackServiceHandler();
+	enum clientEvents
+	{
+		BET,
+		HIT,
+		STAND,
+		STOP
+	};
+
+	BlackJackServiceHandler(GameLogic::Table* table, int money);
 	~BlackJackServiceHandler();
 	void open();
 	void handleEvent(handle handle, EventHandle::Reactor::EventType et);
+	void handleEventString(std::string event);
+	void update(GameLogic::Player::ClientUpdates event);
 
 };
 

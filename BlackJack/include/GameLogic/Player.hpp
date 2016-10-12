@@ -11,27 +11,50 @@
 #include <string>
 #include <vector>
 #include <GameLogic/Card.hpp>
+#include <GameLogic/Table.hpp>
 
 namespace GameLogic {
+
+class Table;
 
 class Player
 {
 public:
-	Player();
-	Player(int money);
+	enum ClientUpdates
+	{
+		DEAL,
+		NEWCARD,
+		DEALERSECONDCARD,
+		DEALERNEWCARD,
+		WON,
+		LOST
+	};
+
+	Player(Table* table, int money = 200);
+	virtual ~Player(){};
 	int getMoney();
 	void setMoney(int value);
+	void wonBettetMoney();
 	void bet(int value);
-	void getCard();
+	void giveCard(Card* card);
+	std::string getCardsNames();
 	int getCardsTotalValue();
-	//void giveCard(Card* card);
-	//std::string getCards();
-	void stick();
-	bool getHitStick();
+	void stand();
+	void hit();
+	bool getIsHitting();
+	void clear();
+	void setIsReady(bool ready);
+	bool getIsReady();
+	virtual void update(ClientUpdates event) = 0;
+protected:
+	Table* table;
 private:
 	int money;
+	bool isHitting;
+	int bettetMoney;
+	bool isReady;
 	std::vector<Card*> cards;
-	bool stickFlag;
+
 };
 
 }

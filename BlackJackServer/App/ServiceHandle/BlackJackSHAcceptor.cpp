@@ -18,8 +18,8 @@ namespace ServiceHandle {
 	BlackJackServiceHandler* BlackJackSHAcceptor::makeServiceHandler()
 	{
 		std::cout << "makeServiceHandler" << std::endl;
-		BlackJackServiceHandler* serviceHandler = new BlackJackServiceHandler();
-		return serviceHandler;
+		//BlackJackServiceHandler* serviceHandler = new BlackJackServiceHandler();
+		//return serviceHandler;
 	}
 
 	void BlackJackSHAcceptor::acceptServiceHandler(BlackJackServiceHandler* sh)
