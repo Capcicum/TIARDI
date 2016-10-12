@@ -61,7 +61,10 @@ std::string Player::getCardsNames()
 	for(auto i = cards.begin(); i != cards.end(); i++)
 	{
 		returnString.append((*i)->getCardName());
-		returnString.append(", ");
+		if(i != cards.end()-1)
+		{
+			returnString.append(", ");
+		}
 	}
 	return returnString;
 }

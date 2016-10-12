@@ -23,9 +23,11 @@ public:
 	enum ClientUpdates
 	{
 		DEAL,
+		DEALERFIRSTCARD,
 		NEWCARD,
 		DEALERSECONDCARD,
 		DEALERNEWCARD,
+		DEALERSTAND,
 		WON,
 		LOST
 	};

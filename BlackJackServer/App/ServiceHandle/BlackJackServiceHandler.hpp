@@ -12,6 +12,7 @@
 #include <OSAL/INET/SocketStream.hpp>
 #include <GameLogic/Player.hpp>
 #include <string>
+#include <sstream>
 
 namespace App {
 namespace ServiceHandle {
@@ -33,6 +34,7 @@ public:
 	void handleEvent(handle handle, EventHandle::Reactor::EventType et);
 	void handleEventString(std::string event);
 	void update(GameLogic::Player::ClientUpdates event);
+	std::string intToString(int value);
 
 };
 

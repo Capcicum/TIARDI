@@ -47,8 +47,11 @@ void BlackJackServiceHandler::handleEventString(std::string event)
 	switch(eventType)
 	{
 	case BET:
-		//int bet = atoi(event.substr(event.size() - 2).c_str());
+	{
+		int betValue = atoi(event.substr(event.size() - 2).c_str());
+		bet(betValue);
 		break;
+	}
 	case HIT:
 		hit();
 		break;
@@ -63,7 +66,45 @@ void BlackJackServiceHandler::handleEventString(std::string event)
 
 void BlackJackServiceHandler::update(GameLogic::Player::ClientUpdates event)
 {
+	std::string message = "";
+	switch(event)
+	{
+	case DEAL:
+		message = intToString((int)DEAL) + "-" + getCardsNames() + "-" + intToString(getCardsTotalValue());
+		stream.send(message);
+		break;
+	case DEALERFIRSTCARD:
+		message = intToString((int)DEALERFIRSTCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		stream.send(message);
+		break;
+	case NEWCARD:
+		message = intToString((int)NEWCARD) + "-" + getCardsNames() + "-" + intToString(getCardsTotalValue());
+		stream.send(message);
+		break;
+	case DEALERSECONDCARD:
+		message = intToString((int)DEALERSECONDCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		stream.send(message);
+		break;
+	case DEALERNEWCARD:
+		message = intToString((int)DEALERNEWCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		stream.send(message);
+		break;
+	case WON:
+		message = intToString((int)WON) + "-" + intToString(getMoney());
+		stream.send(message);
+		break;
+	case LOST:
+		message = intToString((int)LOST) + "-" + intToString(getMoney());
+		stream.send(message);
+		break;
+	}
+}
 
+std::string BlackJackServiceHandler::intToString(int value)
+{
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
 }
 
 }}

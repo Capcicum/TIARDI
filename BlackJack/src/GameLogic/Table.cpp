@@ -82,6 +82,7 @@ namespace GameLogic {
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
 			(*i)->update(Player::DEAL);
+			(*i)->update(Player::DEALERFIRSTCARD);
 			(*i)->setIsReady(false);
 		}
 		phase = DEALING;
@@ -101,21 +102,13 @@ namespace GameLogic {
 			if((*i)->getIsHitting())
 			{
 				(*i)->giveCard(deck->getCard());
-			}
-		}
-		for(auto i = players.begin(); i != players.end(); i++)
-		{
-			if((*i)->getIsHitting())
-			{
+				(*i)->update(Player::NEWCARD);
 				return;
 			}
 		}
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
-			if((*i)->getIsHitting())
-			{
-				(*i)->setIsReady(false);
-			}
+			(*i)->setIsReady(false);
 		}
 		phase = HOUSEPLAYING;
 		update();
@@ -137,7 +130,12 @@ namespace GameLogic {
 				(*i)->update(Player::DEALERNEWCARD);
 			}
 		}
+		for(auto i = players.begin(); i != players.end(); i++)
+		{
+			(*i)->update(Player::DEALERSTAND);
+		}
 		phase = EXIT;
+		update();
 	}
 
 void Table::exit() {
@@ -145,27 +143,33 @@ void Table::exit() {
 	if (dealerValue > 21) {
 		for (auto i = players.begin(); i != players.end(); i++) {
 			if ((*i)->getCardsTotalValue() > 21) {
+				(*i)->update(Player::LOST);
 				(*i)->clear();
 			} else {
 				(*i)->wonBettetMoney();
+				(*i)->update(Player::WON);
 				(*i)->clear();
 			}
 		}
 	} else if (dealerValue == 21) {
 		for (auto i = players.begin(); i != players.end(); i++) {
+			(*i)->update(Player::LOST);
 			(*i)->clear();
 		}
 	} else {
 		for (auto i = players.begin(); i != players.end(); i++) {
 			if ((*i)->getCardsTotalValue() > dealerValue) {
+				(*i)->update(Player::WON);
 				(*i)->wonBettetMoney();
 				(*i)->clear();
 			} else {
+				(*i)->update(Player::LOST);
 				(*i)->clear();
 			}
 		}
 	}
 	phase = BETTING;
+	update();
 }
 
 std::string Table::getDealerCardsName()
