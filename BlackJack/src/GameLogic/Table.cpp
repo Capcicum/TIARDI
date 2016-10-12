@@ -83,6 +83,7 @@ namespace GameLogic {
 		{
 			(*i)->update(Player::DEAL);
 			(*i)->update(Player::DEALERFIRSTCARD);
+			(*i)->update(Player::STARTHITTING);
 			(*i)->setIsReady(false);
 		}
 		phase = DEALING;
@@ -175,6 +176,11 @@ void Table::exit() {
 std::string Table::getDealerCardsName()
 {
 	return dealer->getCardsName();
+}
+
+int Table::getDealersTotalCardValue()
+{
+	return dealer->getCardsTotalValue();
 }
 
 }

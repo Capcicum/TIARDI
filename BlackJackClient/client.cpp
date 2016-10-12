@@ -16,6 +16,9 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <cstdio>
+#include <OSAL/Demux/Select.hpp>
+#include <EventHandle/Reactor/Reactor.hpp>
+#include "App/BlackJackPlayer.hpp"
 
 #include <GameLogic/Table.hpp>
 #include <GameLogic/Card.hpp>
@@ -36,7 +39,7 @@ public:
 int main()
 {
 
-	std::string in;
+	/*std::string in;
 	Table* table = new Table();
 	PlayerClass* player = new PlayerClass(table);
 	table->addNewPlayer(player);
@@ -51,27 +54,26 @@ int main()
 		} else if (in == "stand") {
 			player->stand();
 		}
-	}
+	}*/
 
 
-	/*WSA wsa;
+	WSA wsa;
 	if(wsa.startUp() == WSA::WSAOK)
 	{
 		OSAL::INET::SocketConnector* socketConnector = new OSAL::INET::SocketConnector();
 		OSAL::INET::SocketStream* socketStream = new OSAL::INET::SocketStream();
-		OSAL::INET::INETAddr* addr = new OSAL::INET::INETAddr(27015, inet_addr("198.168.189.27"));
+		OSAL::INET::INETAddr* addr = new OSAL::INET::INETAddr(27015, inet_addr("127.0.0.1"));
+		OSAL::Demux::Select* sel = new OSAL::Demux::Select();
+		OSAL::Demux::Demux* demux = new OSAL::Demux::Demux(sel);
+		EventHandle::Reactor::Reactor* reactor = new EventHandle::Reactor::Reactor(demux);
+
+		BlackJackPlayer* player = new BlackJackPlayer();
 
 		std::cout << "Initialised" << std::endl;
-		/*std::cout << socketStream->getSocket() << std::endl;
-		SOCKET s = socketStream->getSocket();
-
-		handle_t h = static_cast<handle_t>(&s);
-		socket_t *check = static_cast<socket_t*>(h);
-
-		std::cout << *check << std::endl;
 
 		std::cout << "connecting" << std::endl;
-		if(socketConnector->connect(*addr, *socketStream) == OSAL::INET::SocketConnector::SOCKCONOK)
+
+		if(socketConnector->connect(*addr, player->peer()) == OSAL::INET::SocketConnector::SOCKCONOK)
 		{
 			std::cout << "connected" << std::endl;
 		}
@@ -80,18 +82,24 @@ int main()
 			printf("connect failed with error: %d\n", WSAGetLastError());
 			std::cout << "error" << std::endl;
 		}
-		struct sockaddr_storage saddr;
+
+		reactor->registerHandler(player, EventHandle::Reactor::READ_EVENT);
+
+		player->open();
+
+		/*struct sockaddr_storage saddr;
 		socklen_t len = sizeof saddr;
 		getpeername(socketStream->getHandle(), (struct sockaddr*)&addr, &len);
 	    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
 	    int port = ntohs(s->sin_port);
 
 	    printf("Peer IP address: %s\n", inet_ntoa(s->sin_addr));
-	    printf("Peer port      : %d\n", port);
+	    printf("Peer port      : %d\n", port);*/
 
 		while(true)
 		{
-			std::string msg = "";
+			reactor->handleEvents();
+			/*std::string msg = "";
 			std::cout << "input word:" << std::endl;
 			std::getline(std::cin, msg);
 			std::cout << msg << std::endl;
@@ -102,9 +110,9 @@ int main()
 			else
 			{
 				std::cout << "error" << std::endl;
-			}
+			}*/
 		}
 
-	}*/
+	}
 	return 0;
 }

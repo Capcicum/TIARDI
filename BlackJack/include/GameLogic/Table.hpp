@@ -40,6 +40,7 @@ public:
 	void housePlaying();
 	void exit();
 	std::string getDealerCardsName();
+	int getDealersTotalCardValue();
 
 private:
 	GamePhases phase;

@@ -13,6 +13,7 @@
 #include <GameLogic/Player.hpp>
 #include <limits>
 #include <iostream>
+#include <sstream>
 
 class BlackJackPlayer : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>
 {
@@ -35,6 +36,7 @@ public:
 
 	void deal(std::string event);
 	void dealerFirstCard(std::string event);
+	void startHitting(std::string event);
 	void dealerNewCard(std::string event);
 	void dealerSecondCard(std::string event);
 	void dealerStand(std::string event);
@@ -42,6 +44,9 @@ public:
 	void newCard(std::string event);
 	void won(std::string event);
 	void betting();
+
+	void sendBet(int money);
+	void sendIsHitting(clientEvents event);
 };
 
 

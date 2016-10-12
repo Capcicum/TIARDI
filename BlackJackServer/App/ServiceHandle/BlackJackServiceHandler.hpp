@@ -17,7 +17,7 @@
 namespace App {
 namespace ServiceHandle {
 
-class BlackJackServiceHandler : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>, GameLogic::Player
+class BlackJackServiceHandler : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>, public GameLogic::Player
 {
 public:
 	enum clientEvents

@@ -65,7 +65,6 @@ void Reactor::handleEvents(int timeout)
 	if (result > 0)
 	{
 		for (auto iRead = readFds.begin(); iRead != readFds.end(); iRead++) {
-			std::cout << "read" << std::endl;
 			auto search = table.find(*iRead);
 			if (search != table.end()) {
 				search->second.evh->handleEvent(*iRead,

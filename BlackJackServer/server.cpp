@@ -19,6 +19,8 @@
 #include "TestEventHandler.hpp"
 #include "App/ServiceHandle/BlackJackSHAcceptor.hpp"
 
+#include <GameLogic/Table.hpp>
+
 int main()
 {
 
@@ -32,12 +34,15 @@ int main()
 		OSAL::Demux::Demux* demux = new OSAL::Demux::Demux(sel);
 		EventHandle::Reactor::Reactor* reactor = new EventHandle::Reactor::Reactor(demux);
 
-		EventHandle::Reactor::TestEventHandler* eventHandler = new EventHandle::Reactor::TestEventHandler(acceptor);
+		GameLogic::Table* table = new GameLogic::Table();
 
+		//EventHandle::Reactor::TestEventHandler* eventHandler = new EventHandle::Reactor::TestEventHandler(acceptor);
+
+		App::ServiceHandle::BlackJackServiceHandler* serviceHandler = new App::ServiceHandle::BlackJackServiceHandler(table, 400);
 		std::cout << "Initialised" << std::endl;
 
 		std::cout << "accepting" << std::endl;
-		/*if(acceptor->accept(*socketStream) == OSAL::INET::SocketAcceptor::SOCKACCOK)
+		if(acceptor->accept(serviceHandler->peer()) == OSAL::INET::SocketAcceptor::SOCKACCOK)
 		{
 			std::cout << "accepted" << std::endl;
 		}
@@ -45,9 +50,11 @@ int main()
 		{
 			printf("createSocket failed with error: %d\n", WSAGetLastError());
 			std::cout << "error" << std::endl;
-		}*/
+		}
 
-		reactor->registerHandler(eventHandler, EventHandle::Reactor::READ_EVENT);
+		reactor->registerHandler(serviceHandler, EventHandle::Reactor::READ_EVENT);
+
+		table->addNewPlayer(serviceHandler);
 
 		/*App::ServiceHandle::BlackJackSHAcceptor* shAcceptor = new App::ServiceHandle::BlackJackSHAcceptor(*addr, reactor);
 

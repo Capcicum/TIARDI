@@ -19,18 +19,16 @@
 
 	void BlackJackPlayer::open()
 	{
-
+		betting();
 	}
 
 	void BlackJackPlayer::handleEvent(handle handle, EventHandle::Reactor::EventType et)
 	{
-		std::cout << "from bj handler" << std::endl;
 		if(et == EventHandle::Reactor::READ_EVENT)
 		{
 			std::string msg = "";
 			if(stream.receive(msg) == OSAL::INET::SocketStream::SOCKETOK)
 			{
-				std::cout << msg << std::endl;
 				handleEventString(msg);
 
 			}
@@ -44,20 +42,31 @@
 		switch(eventType)
 		{
 		case GameLogic::Player::DEAL:
+			deal(event);
 			break;
 		case GameLogic::Player::DEALERFIRSTCARD:
+			dealerFirstCard(event);
+			break;
+		case GameLogic::Player::STARTHITTING:
+			startHitting(event);
 			break;
 		case GameLogic::Player::DEALERNEWCARD:
+			dealerNewCard(event);
 			break;
 		case GameLogic::Player::DEALERSECONDCARD:
+			dealerSecondCard(event);
 			break;
 		case GameLogic::Player::DEALERSTAND:
+			dealerStand(event);
 			break;
 		case GameLogic::Player::LOST:
+			lost(event);
 			break;
 		case GameLogic::Player::NEWCARD:
+			newCard(event);
 			break;
 		case GameLogic::Player::WON:
+			won(event);
 			break;
 
 		}
@@ -65,7 +74,9 @@
 
 	std::string BlackJackPlayer::intToString(int value)
 	{
-
+		std::stringstream ss;
+		ss << value;
+		return ss.str();
 	}
 
 	int BlackJackPlayer::nthOccurrence(const std::string& str, const std::string& findMe, int nth)
@@ -86,16 +97,25 @@
 
 	void BlackJackPlayer::deal(std::string event)
 	{
-		std::cout << "All players has placed their bets, and the dealer will now proceed to deal cards" << std::endl;
+		std::cout << "All players has placed their bets, and the dealer will now proceed to deal cards." << std::endl;
 		std::cout << "Your cards are:" << std::endl;
-		std::string cards = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
+		std::string cards = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
 		std::cout << cards << std::endl;
-		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
-		std::cout << "Your cards are:" << std::endl;
-		std::string cards = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
-		std::cout << cards << std::endl;
-		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
-		int totalValue = atoi(event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1).c_str());
+		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
+	}
+
+	void BlackJackPlayer::dealerFirstCard(std::string event)
+	{
+		std::cout << "The dealers first card is:" << std::endl;
+		std::string card = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
+		std::cout << card << std::endl;
+		std::cout << "The total value the dealers card is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
+	}
+
+	void BlackJackPlayer::startHitting(std::string event)
+	{
+		int totalValue = atoi(event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1).c_str());
+		std::cout << totalValue << std::endl;
 		if(totalValue > 21)
 		{
 			std::string choice;
@@ -126,15 +146,6 @@
 		{
 			std::cout << "Your total value has exceeded 21, your are busted, and can't proceed." << std::endl;
 		}
-
-	}
-
-	void BlackJackPlayer::dealerFirstCard(std::string event)
-	{
-		std::cout << "The dealers first card is:" << std::endl;
-		std::string card = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
-		std::cout << card << std::endl;
-		std::cout << "The total value the dealers card is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
 	}
 
 	void BlackJackPlayer::dealerNewCard(std::string event)
@@ -187,11 +198,11 @@
 				std::cin >> choice;
 				if(choice == "hit")
 				{
-
+					sendIsHitting(HIT);
 				}
 				else if(choice == "stand")
 				{
-
+					sendIsHitting(STAND);
 				}
 				else
 				{
@@ -226,7 +237,20 @@
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cout << "Value was not a number, try again." << std::endl;
 		}
+		sendBet(bet);
 
+	}
+
+	void BlackJackPlayer::sendBet(int money)
+	{
+		std::string sendString = intToString((int)BET) + "-" + intToString(money);
+		stream.send(sendString);
+	}
+
+	void BlackJackPlayer::sendIsHitting(clientEvents event)
+	{
+		std::string sendString = intToString((int)event);
+		stream.send(sendString);
 	}
 
 

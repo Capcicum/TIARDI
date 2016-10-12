@@ -27,15 +27,12 @@ void BlackJackServiceHandler::open()
 
 void BlackJackServiceHandler::handleEvent(handle handle, EventHandle::Reactor::EventType et)
 {
-	std::cout << "from bj handler" << std::endl;
 	if(et == EventHandle::Reactor::READ_EVENT)
 	{
 		std::string msg = "";
 		if(stream.receive(msg) == OSAL::INET::SocketStream::SOCKETOK)
 		{
-			std::cout << msg << std::endl;
 			handleEventString(msg);
-
 		}
 	}
 }
@@ -74,7 +71,11 @@ void BlackJackServiceHandler::update(GameLogic::Player::ClientUpdates event)
 		stream.send(message);
 		break;
 	case DEALERFIRSTCARD:
-		message = intToString((int)DEALERFIRSTCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		message = intToString((int)DEALERFIRSTCARD) + "-" + table->getDealerCardsName() + "-" + intToString(table->getDealersTotalCardValue());
+		stream.send(message);
+		break;
+	case STARTHITTING:
+		message = intToString((int)STARTHITTING) + "-" + intToString(getCardsTotalValue());
 		stream.send(message);
 		break;
 	case NEWCARD:
@@ -82,11 +83,15 @@ void BlackJackServiceHandler::update(GameLogic::Player::ClientUpdates event)
 		stream.send(message);
 		break;
 	case DEALERSECONDCARD:
-		message = intToString((int)DEALERSECONDCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		message = intToString((int)DEALERSECONDCARD) + "-" + table->getDealerCardsName() + "-" + intToString(table->getDealersTotalCardValue());
+		stream.send(message);
+		break;
+	case DEALERSTAND:
+		message = intToString((int)DEALERSTAND);
 		stream.send(message);
 		break;
 	case DEALERNEWCARD:
-		message = intToString((int)DEALERNEWCARD) + "-" + table->getDealerCardsName() + "-" + intToString(getCardsTotalValue());
+		message = intToString((int)DEALERNEWCARD) + "-" + table->getDealerCardsName() + "-" + intToString(table->getDealersTotalCardValue());
 		stream.send(message);
 		break;
 	case WON:
