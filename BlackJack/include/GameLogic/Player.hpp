@@ -37,6 +37,7 @@ public:
 	virtual ~Player(){};
 	int getMoney();
 	void setMoney(int value);
+	int getBettetMoney();
 	void wonBettetMoney();
 	void bet(int value);
 	void giveCard(Card* card);

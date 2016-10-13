@@ -62,7 +62,7 @@ int main()
 
 		while(true)
 		{
-			reactor->handleEvents(NULL);
+			reactor->handleEvents();
 		}
 
 	}

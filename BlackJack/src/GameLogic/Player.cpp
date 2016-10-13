@@ -28,6 +28,11 @@ void Player::setMoney(int value)
 	money = value;
 }
 
+int Player::getBettetMoney()
+{
+	return bettetMoney;
+}
+
 void Player::wonBettetMoney()
 {
 	money += bettetMoney*2;

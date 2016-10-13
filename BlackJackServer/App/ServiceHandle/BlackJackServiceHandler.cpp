@@ -40,12 +40,11 @@ void BlackJackServiceHandler::handleEvent(handle handle, EventHandle::Reactor::E
 void BlackJackServiceHandler::handleEventString(std::string event)
 {
 	clientEvents eventType = (clientEvents)atoi(std::string(1, event.at(0)).c_str());
-
 	switch(eventType)
 	{
 	case BET:
 	{
-		int betValue = atoi(event.substr(event.size() - 2).c_str());
+		int betValue = atoi(event.substr(2, event.size()-2).c_str());
 		bet(betValue);
 		break;
 	}
@@ -67,7 +66,7 @@ void BlackJackServiceHandler::update(GameLogic::Player::ClientUpdates event)
 	switch(event)
 	{
 	case DEAL:
-		message = intToString((int)DEAL) + "-" + getCardsNames() + "-" + intToString(getCardsTotalValue());
+		message = intToString((int)DEAL) + "-" + getCardsNames() + "-" + intToString(getCardsTotalValue()) + "-" + table->getDealerCardsName() + "-" + intToString(table->getDealersTotalCardValue());
 		stream.send(message);
 		break;
 	case DEALERFIRSTCARD:

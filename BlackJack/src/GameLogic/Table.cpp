@@ -7,6 +7,7 @@
 
 #include <GameLogic/Table.hpp>
 #include <iostream>
+#include <windows.h>
 
 namespace GameLogic {
 
@@ -31,7 +32,6 @@ namespace GameLogic {
 			delete *iter;
 			players.erase(iter);
 		}
-
 	}
 
 	void Table::startNewGame()
@@ -78,12 +78,11 @@ namespace GameLogic {
 				return;
 			}
 		}
+		Sleep(1000);
 		dealNewRound();
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
 			(*i)->update(Player::DEAL);
-			(*i)->update(Player::DEALERFIRSTCARD);
-			(*i)->update(Player::STARTHITTING);
 			(*i)->setIsReady(false);
 		}
 		phase = DEALING;
@@ -112,6 +111,7 @@ namespace GameLogic {
 			(*i)->setIsReady(false);
 		}
 		phase = HOUSEPLAYING;
+		Sleep(2);
 		update();
 
 	}
@@ -123,19 +123,24 @@ namespace GameLogic {
 		{
 			(*i)->update(Player::DEALERSECONDCARD);
 		}
+		Sleep(1000);
 		while(dealer->getIsHitting())
 		{
 			dealer->giveCard(deck->getCard());
 			for(auto i = players.begin(); i != players.end(); i++)
 			{
+
 				(*i)->update(Player::DEALERNEWCARD);
 			}
+			Sleep(1000);
 		}
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
+
 			(*i)->update(Player::DEALERSTAND);
 		}
 		phase = EXIT;
+		Sleep(1000);
 		update();
 	}
 
@@ -159,9 +164,9 @@ void Table::exit() {
 		}
 	} else {
 		for (auto i = players.begin(); i != players.end(); i++) {
-			if ((*i)->getCardsTotalValue() > dealerValue) {
-				(*i)->update(Player::WON);
+			if ((*i)->getCardsTotalValue() > dealerValue && (*i)->getCardsTotalValue() <= 21) {
 				(*i)->wonBettetMoney();
+				(*i)->update(Player::WON);
 				(*i)->clear();
 			} else {
 				(*i)->update(Player::LOST);
@@ -169,6 +174,7 @@ void Table::exit() {
 			}
 		}
 	}
+	dealer->clear();
 	phase = BETTING;
 	update();
 }

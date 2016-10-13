@@ -101,7 +101,37 @@
 		std::cout << "Your cards are:" << std::endl;
 		std::string cards = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
 		std::cout << cards << std::endl;
-		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
+		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, nthOccurrence(event, "-", 3) - nthOccurrence(event, "-", 2)-1) << std::endl;
+		std::cout << "The dealers first card is:" << std::endl;
+		std::string card = event.substr(nthOccurrence(event, "-", 3)+1, nthOccurrence(event, "-", 4) - nthOccurrence(event, "-", 3)-1);
+		std::cout << card << std::endl;
+		std::cout << "The total value the dealers card is: " << event.substr(nthOccurrence(event, "-", 4)+1, event.size() - nthOccurrence(event, "-", 4)) << std::endl;
+		int totalValue = atoi(event.substr(nthOccurrence(event, "-", 2)+1, nthOccurrence(event, "-", 3) - nthOccurrence(event, "-", 2)-1).c_str());
+		if(totalValue < 21)
+		{
+			std::string choice;
+			std::cout << "You can now either hit or stand input [hit/stand]" << std::endl;
+			bool cinFineFlag = true;
+			while(cinFineFlag)
+			{
+				std::cin >> choice;
+				if(choice == "hit")
+				{
+					sendIsHitting(HIT);
+					cinFineFlag = false;
+				}
+				else if(choice == "stand")
+				{
+					sendIsHitting(STAND);
+					cinFineFlag = false;
+				}
+				else
+				{
+					std::cout << "Wrong input try again:" << std::endl;
+					cinFineFlag = false;
+				}
+			}
+		}
 	}
 
 	void BlackJackPlayer::dealerFirstCard(std::string event)
@@ -115,8 +145,7 @@
 	void BlackJackPlayer::startHitting(std::string event)
 	{
 		int totalValue = atoi(event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1).c_str());
-		std::cout << totalValue << std::endl;
-		if(totalValue > 21)
+		if(totalValue < 21)
 		{
 			std::string choice;
 			std::cout << "You can now either hit or stand input [hit/stand]" << std::endl;
@@ -126,11 +155,13 @@
 				std::cin >> choice;
 				if(choice == "hit")
 				{
-
+					sendIsHitting(HIT);
+					cinFineFlag = false;
 				}
 				else if(choice == "stand")
 				{
-
+					sendIsHitting(STAND);
+					cinFineFlag = false;
 				}
 				else
 				{
@@ -141,10 +172,12 @@
 		else if (totalValue == 21)
 		{
 			std::cout << "Your total value is 21, you will now stand." << std::endl;
+			sendIsHitting(STAND);
 		}
 		else
 		{
 			std::cout << "Your total value has exceeded 21, your are busted, and can't proceed." << std::endl;
+			sendIsHitting(STAND);
 		}
 	}
 
@@ -152,18 +185,18 @@
 	{
 		std::cout << "The dealer has chosen to hit and will now get a new card:" << std::endl;
 		std::cout << "The dealers cards are:" << std::endl;
-		std::string card = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
+		std::string card = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
 		std::cout << card << std::endl;
-		std::cout << "The total value the dealers cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
+		std::cout << "The total value the dealers cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
 	}
 
 	void BlackJackPlayer::dealerSecondCard(std::string event)
 	{
 		std::cout << "All players has received their cards, and made their decisions. The dealer will now reveal their second card." << std::endl;
 		std::cout << "The dealers cards are:" << std::endl;
-		std::string card = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
+		std::string card = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
 		std::cout << card << std::endl;
-		std::cout << "The total value the dealers cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
+		std::cout << "The total value the dealers cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
 
 	}
 
@@ -175,7 +208,7 @@
 	void BlackJackPlayer::lost(std::string event)
 	{
 		std::cout << "You have lost." << std::endl;
-		std::cout << "Your new balance is:" << event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1) << std::endl;
+		std::cout << "Your new balance is: " << event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1) << std::endl;
 		betting();
 	}
 
@@ -183,12 +216,13 @@
 
 	void BlackJackPlayer::newCard(std::string event)
 	{
+		std::cout << "You have chosen to receive a new card." << std::endl;
 		std::cout << "Your cards are:" << std::endl;
-		std::string cards = event.substr(nthOccurrence(event, "-", 1), nthOccurrence(event, "-", 2));
+		std::string cards = event.substr(nthOccurrence(event, "-", 1)+1, nthOccurrence(event, "-", 2)-2);
 		std::cout << cards << std::endl;
-		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1);
+		std::cout << "The total value of your cards is: " << event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1) << std::endl;
 		int totalValue = atoi(event.substr(nthOccurrence(event, "-", 2)+1, event.size()-1).c_str());
-		if(totalValue > 21)
+		if(totalValue < 21)
 		{
 			std::string choice;
 			std::cout << "You can now either hit or stand input [hit/stand]" << std::endl;
@@ -199,31 +233,36 @@
 				if(choice == "hit")
 				{
 					sendIsHitting(HIT);
+					cinFineFlag = false;
 				}
 				else if(choice == "stand")
 				{
 					sendIsHitting(STAND);
+					cinFineFlag = false;
 				}
 				else
 				{
 					std::cout << "Wrong input try again:" << std::endl;
+					cinFineFlag = false;
 				}
 			}
 		}
 		else if (totalValue == 21)
 		{
 			std::cout << "Your total value is 21, you will now stand." << std::endl;
+			sendIsHitting(STAND);
 		}
 		else
 		{
 			std::cout << "Your total value has exceeded 21, your are busted, and can't proceed." << std::endl;
+			sendIsHitting(STAND);
 		}
 	}
 
 	void BlackJackPlayer::won(std::string event)
 	{
 		std::cout << "You have won. Huraaaay!!" << std::endl;
-		std::cout << "Your new balance is:" << event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1) << std::endl;
+		std::cout << "Your new balance is: " << event.substr(nthOccurrence(event, "-", 1)+1, event.size()-1) << std::endl;
 		betting();
 	}
 
