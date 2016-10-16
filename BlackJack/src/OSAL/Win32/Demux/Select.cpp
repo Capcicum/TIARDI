@@ -26,8 +26,8 @@ int Select::handle_events(
 	FD_ZERO(&exceptFds);
 
 	std::for_each(ioReadFds.begin(), ioReadFds.end(), [&readFds](handle i){FD_SET(i, &readFds);});
-	std::for_each(ioReadFds.begin(), ioReadFds.end(), [&writeFds](handle i){FD_SET(i, &writeFds);});
-	std::for_each(ioReadFds.begin(), ioReadFds.end(), [&exceptFds](handle i){FD_SET(i, &exceptFds);});
+	std::for_each(ioWriteFds.begin(), ioWriteFds.end(), [&writeFds](handle i){FD_SET(i, &writeFds);});
+	std::for_each(ioExceptFds.begin(), ioExceptFds.end(), [&exceptFds](handle i){FD_SET(i, &exceptFds);});
 
 
     int aMaxReadFd = 0;
@@ -63,21 +63,21 @@ int Select::handle_events(
     		std::remove_if(
     				ioReadFds.begin(),
 					ioReadFds.end(),
-    				[&readFds](handle i){return FD_ISSET(i, &readFds) == 1;}),
+    				[&readFds](handle i){return FD_ISSET(i, &readFds) == 0;}),
 			ioReadFds.end());
 
     ioWriteFds.erase(
     		std::remove_if(
     				ioWriteFds.begin(),
 					ioWriteFds.end(),
-					[&writeFds](handle i){return FD_ISSET(i, &writeFds) == 1;}),
+					[&writeFds](handle i){return FD_ISSET(i, &writeFds) == 0;}),
 			ioWriteFds.end());
 
     ioExceptFds.erase(
     		std::remove_if(
     				ioExceptFds.begin(),
     				ioExceptFds.end(),
-					[&exceptFds](handle i){return FD_ISSET(i, &exceptFds) == 1;}),
+					[&exceptFds](handle i){return FD_ISSET(i, &exceptFds) == 0;}),
 			ioExceptFds.end());
 
    return result;

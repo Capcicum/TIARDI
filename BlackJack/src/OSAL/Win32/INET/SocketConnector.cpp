@@ -52,5 +52,10 @@ SocketConnector::SocketConnectorReturn SocketConnector::getError()
 	return result;
 }
 
+handle SocketConnector::getHandle() const
+{
+	return socket;
+}
+
 
 }}

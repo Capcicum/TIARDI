@@ -18,13 +18,23 @@ namespace GameLogic {
 		shuffleDeck();
 	}
 
+	Deck::~Deck()
+	{
+		clear();
+	}
+
 	void Deck::clear()
 	{
+		for(auto i = deck.begin(); i != deck.end(); i++)
+		{
+			delete (*i);
+		}
 		deck.clear();
 	}
 
 	void Deck::createNewDeck(int numOfDecks)
 	{
+		clear();
 		for(int i = 0; i <= numOfDecks; i++)
 		{
 			for (int s = Card::CLUBS; s <= Card::SPADES; ++s)

@@ -17,6 +17,23 @@ Player::Player(Table* table, int money) :
 {
 
 }
+Player::~Player()
+{
+	clearCards();
+}
+
+void Player::clearForNewGame()
+{
+	setBettetMoney(0);
+	setIsHitting(true);
+	clearCards();
+}
+
+void Player::wonBettetMoney()
+{
+	int won = getMoney() + getBettetMoney()*2;
+	setMoney(won);
+}
 
 int Player::getMoney()
 {
@@ -28,103 +45,6 @@ void Player::setMoney(int value)
 	money = value;
 }
 
-int Player::getBettetMoney()
-{
-	return bettetMoney;
-}
-
-void Player::wonBettetMoney()
-{
-	money += bettetMoney*2;
-}
-
-void Player::bet(int value)
-{
-	if(value >= money)
-	{
-		bettetMoney = money;
-		setMoney(0);
-		setIsReady(true);
-	}
-	else
-	{
-		bettetMoney = value;
-		setMoney(money - value);
-		setIsReady(true);
-	}
-	table->update();
-}
-
-void Player::giveCard(Card* card)
-{
-	cards.push_back(card);
-}
-
-std::string Player::getCardsNames()
-{
-	std::string returnString;
-	for(auto i = cards.begin(); i != cards.end(); i++)
-	{
-		returnString.append((*i)->getCardName());
-		if(i != cards.end()-1)
-		{
-			returnString.append(", ");
-		}
-	}
-	return returnString;
-}
-
-void Player::stand() {
-	isHitting = false;
-	setIsReady(true);
-	table->update();
-}
-
-int Player::getCardsTotalValue()
-{
-	int total = 0;
-	for(auto i = cards.begin(); i != cards.end(); i++)
-	{
-		total += (*i)->getValue();
-	}
-	bool containsAce = false;
-	for (auto iter = cards.begin(); iter != cards.end(); ++iter)
-	{
-		if ((*iter)->getValue() == Card::ACE)
-		{
-			containsAce = true;
-		}
-	}
-	//if hand contains ace and total is low enough, treat ace as 11
-	if (containsAce && total <= 11)
-	{
-	//add only 10 since we’ve already added 1 for the ace
-		total += 10;
-	}
-	return total;
-}
-
-void Player::hit()
-{
-	setIsReady(true);
-	table->update();
-}
-
-bool Player::getIsHitting() {
-	return isHitting;
-}
-
-void Player::clear()
-{
-	bettetMoney = 0;
-	isHitting = true;
-	for(auto i = cards.begin(); i != cards.end(); i++)
-	{
-		delete *i;
-	}
-	cards.clear();
-}
-
 void Player::setIsReady(bool ready)
 {
 	isReady = ready;
@@ -134,5 +54,71 @@ bool Player::getIsReady()
 {
 	return isReady;
 }
+
+int Player::getBettetMoney()
+{
+	return bettetMoney;
+}
+
+void Player::setBettetMoney(int value)
+{
+	bettetMoney = value;
+}
+
+bool Player::getIsHitting()
+{
+	return isHitting;
+}
+
+void Player::setIsHitting(bool hitting)
+{
+	isHitting = hitting;
+}
+
+Table* Player::getTable()
+{
+	return table;
+}
+
+void Player::setTable(Table* t)
+{
+	table = t;
+}
+
+//Protected
+
+void Player::bet(int value)
+{
+	if(value >= getMoney())
+	{
+		setBettetMoney(getMoney());
+		setMoney(0);
+		setIsReady(true);
+	}
+	else
+	{
+		setBettetMoney(value);
+		int moneyLeft = getMoney()-value;
+		setMoney(moneyLeft);
+		setIsReady(true);
+	}
+	getTable()->update();
+}
+
+
+
+void Player::stand()
+{
+	setIsHitting(false);
+	setIsReady(true);
+	getTable()->update();
+}
+
+void Player::hit()
+{
+	setIsReady(true);
+	getTable()->update();
+}
+
 }
 

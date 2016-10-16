@@ -15,7 +15,10 @@
 #include <iostream>
 #include <sstream>
 
-class BlackJackPlayer : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>
+namespace App
+{
+
+class BlackJackClientServiceHandler : public EventHandle::AccConn::ServiceHandler<OSAL::INET::SocketStream>
 {
 public:
 	enum clientEvents
@@ -26,28 +29,29 @@ public:
 		STOP
 	};
 
-	BlackJackPlayer();
-	~BlackJackPlayer();
+	BlackJackClientServiceHandler();
+	~BlackJackClientServiceHandler();
 	void open();
 	void handleEvent(handle handle, EventHandle::Reactor::EventType et);
 	void handleEventString(std::string event);
-	std::string intToString(int value);
-	int nthOccurrence(const std::string& str, const std::string& findMe, int nth);
 
+private:
 	void deal(std::string event);
-	void dealerFirstCard(std::string event);
-	void startHitting(std::string event);
 	void dealerNewCard(std::string event);
 	void dealerSecondCard(std::string event);
 	void dealerStand(std::string event);
 	void lost(std::string event);
 	void newCard(std::string event);
 	void won(std::string event);
-	void betting();
 
+	void betting();
 	void sendBet(int money);
 	void sendIsHitting(clientEvents event);
 };
+
+}
+
+
 
 
 

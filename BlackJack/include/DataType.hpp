@@ -16,7 +16,6 @@ typedef unsigned long u_int32;
 typedef signed long int32;
 typedef unsigned long long u_int64;
 typedef signed long long int64;
-typedef signed long long lala;
 
 #ifdef WIN
 

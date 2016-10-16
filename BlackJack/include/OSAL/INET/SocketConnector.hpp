@@ -29,6 +29,7 @@ public:
 	void closeSocket();
 	SocketConnectorReturn connect(const INETAddr &addr, SocketStream &s);
 	SocketConnectorReturn getError();
+	handle getHandle() const;
 private:
 	socket_t socket;
 };

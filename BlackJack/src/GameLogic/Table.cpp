@@ -8,15 +8,26 @@
 #include <GameLogic/Table.hpp>
 #include <iostream>
 #include <windows.h>
+#include <OSAL/Task/Task.hpp>
 
 namespace GameLogic {
 
 
-	Table::Table() :
-			phase(BETTING)
+	Table::Table(int numOfDecks) :
+			phase(BETTING), numOfDecks(numOfDecks)
 	{
 		dealer = new Dealer();
-		deck = new Deck(1);
+		deck = new Deck(numOfDecks);
+	}
+
+	Table::~Table()
+	{
+		delete dealer;
+		delete deck;
+		for(auto i = players.begin(); i != players.end(); i++)
+		{
+			delete (*i);
+		}
 	}
 
 	void Table::addNewPlayer(Player* player)
@@ -41,7 +52,10 @@ namespace GameLogic {
 
 	void Table::dealNewRound()
 	{
-
+		if(deck->getCardsLeft() < (numOfDecks*52)/2)
+		{
+			deck->createNewDeck(numOfDecks);
+		}
 		dealer->giveCard(deck->getCard());
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
@@ -78,7 +92,7 @@ namespace GameLogic {
 				return;
 			}
 		}
-		Sleep(1000);
+		OSAL::Task::Task().sleep(2000);
 		dealNewRound();
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
@@ -123,7 +137,7 @@ namespace GameLogic {
 		{
 			(*i)->update(Player::DEALERSECONDCARD);
 		}
-		Sleep(1000);
+		OSAL::Task::Task().sleep(2000);
 		while(dealer->getIsHitting())
 		{
 			dealer->giveCard(deck->getCard());
@@ -132,7 +146,7 @@ namespace GameLogic {
 
 				(*i)->update(Player::DEALERNEWCARD);
 			}
-			Sleep(1000);
+			OSAL::Task::Task().sleep(2000);
 		}
 		for(auto i = players.begin(); i != players.end(); i++)
 		{
@@ -140,7 +154,7 @@ namespace GameLogic {
 			(*i)->update(Player::DEALERSTAND);
 		}
 		phase = EXIT;
-		Sleep(1000);
+		OSAL::Task::Task().sleep(2000);
 		update();
 	}
 
@@ -150,31 +164,31 @@ void Table::exit() {
 		for (auto i = players.begin(); i != players.end(); i++) {
 			if ((*i)->getCardsTotalValue() > 21) {
 				(*i)->update(Player::LOST);
-				(*i)->clear();
+				(*i)->clearForNewGame();
 			} else {
 				(*i)->wonBettetMoney();
 				(*i)->update(Player::WON);
-				(*i)->clear();
+				(*i)->clearForNewGame();
 			}
 		}
 	} else if (dealerValue == 21) {
 		for (auto i = players.begin(); i != players.end(); i++) {
 			(*i)->update(Player::LOST);
-			(*i)->clear();
+			(*i)->clearForNewGame();
 		}
 	} else {
 		for (auto i = players.begin(); i != players.end(); i++) {
 			if ((*i)->getCardsTotalValue() > dealerValue && (*i)->getCardsTotalValue() <= 21) {
 				(*i)->wonBettetMoney();
 				(*i)->update(Player::WON);
-				(*i)->clear();
+				(*i)->clearForNewGame();
 			} else {
 				(*i)->update(Player::LOST);
-				(*i)->clear();
+				(*i)->clearForNewGame();
 			}
 		}
 	}
-	dealer->clear();
+	dealer->clearCards();
 	phase = BETTING;
 	update();
 }

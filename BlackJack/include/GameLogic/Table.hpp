@@ -29,21 +29,61 @@ public:
 		EXIT
 	};
 
-	Table();
+	/**
+	 * @brief - constructor
+	 * @param numOfDeck - the number of decks to use
+	 */
+	Table(int numOfDecks = 1);
+
+	/**
+	 * @brief - the destructor
+	 */
+	~Table();
+
+	/**
+	 * @brief - adds a new player to the game
+	 * @param player -  pointer to the player to be added
+	 */
 	void addNewPlayer(Player* player);
+
+	/**
+	 * @brief - deletes a player from the game
+	 * @param player - a pointer to the player to be deleted
+	 */
 	void deletePlayer(Player* player);
+
+	/**
+	 * @brief - starts a new game
+	 */
 	void startNewGame();
-	void dealNewRound();
+
+	/**
+	 * @brief - updates the game, usually called by the players to update the game
+	 */
 	void update();
+
+	/**
+	 * @brief - gets the names of the card of the dealer
+	 * @return - a string with card names
+	 */
+	std::string getDealerCardsName();
+
+	/**
+	 * @brief - get the total value of the dealers cards
+	 * @return - the value of the dealers cards.
+	 */
+	int getDealersTotalCardValue();
+
+private:
+	void dealNewRound();
+
 	void betting();
 	void dealing();
 	void housePlaying();
 	void exit();
-	std::string getDealerCardsName();
-	int getDealersTotalCardValue();
 
-private:
 	GamePhases phase;
+	int numOfDecks;
 	Deck* deck;
 	Dealer* dealer;
 	std::vector<Player*> players;

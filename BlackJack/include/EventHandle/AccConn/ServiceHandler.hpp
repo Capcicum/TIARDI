@@ -19,30 +19,49 @@ template <class IPCSTREAM>
 class ServiceHandler : public Reactor::EventHandler
 {
 public:
+
+	/**
+	 * @brief - Virtual function creating an interface for activating the service handler
+	 */
 	virtual void open()=0;
 
+	/**
+	 * @brief - Returns the stream object
+	 * @return - The stream object
+	 */
 	IPCSTREAM& peer()
 	{
 		return stream;
 	}
 
+	/**
+	 * NOT IMPLEMENTED
+	 */
 	std::string remoteAddr()
 	{
 		return "hej";
 	}
 
+	/**
+	 * @brief - sets the handle of the stream object
+	 * @param h - the handle to set in the stream object
+	 */
 	void setHandle(handle h)
 	{
 		stream.setHandle(h);
 	}
 
+	/**
+	 * @brief - Returns the handle of the stream object
+	 * @return - the stream objects handle
+	 */
 	handle getHandle() const
 	{
 		return stream.getHandle();
 	}
 
 protected:
-	IPCSTREAM stream;
+	IPCSTREAM stream; // The stream obejct used to hold the actual connection
 };
 
 

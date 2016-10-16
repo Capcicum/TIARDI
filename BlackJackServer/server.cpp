@@ -16,8 +16,9 @@
 #include "OSAL/Win32/INET/WSA.hpp"
 #include <iostream>
 #include <string>
-#include "TestEventHandler.hpp"
-#include "App/ServiceHandle/BlackJackSHAcceptor.hpp"
+
+#include <App/BlackJackServerServiceHandlerAcceptor.hpp>
+#include <EventHandle/Reactor/ReactorFactory.hpp>
 
 #include <GameLogic/Table.hpp>
 
@@ -27,42 +28,17 @@ int main()
 	WSA wsa;
 	if(wsa.startUp() == WSA::WSAOK)
 	{
-		OSAL::INET::SocketStream* socketStream = new OSAL::INET::SocketStream();
-		OSAL::INET::INETAddr* addr = new OSAL::INET::INETAddr(27015, inet_addr("127.0.0.1"));
-		OSAL::INET::SocketAcceptor* acceptor = new OSAL::INET::SocketAcceptor(*addr);
-		OSAL::Demux::Select* sel = new OSAL::Demux::Select();
-		OSAL::Demux::Demux* demux = new OSAL::Demux::Demux(sel);
-		EventHandle::Reactor::Reactor* reactor = new EventHandle::Reactor::Reactor(demux);
+		EventHandle::Reactor::ReactorFactory* factory = new EventHandle::Reactor::ReactorFactory(EventHandle::Reactor::ReactorFactory::SELECT);
 
 		GameLogic::Table* table = new GameLogic::Table();
 
-		//EventHandle::Reactor::TestEventHandler* eventHandler = new EventHandle::Reactor::TestEventHandler(acceptor);
+		App::BlackJackServerServiceHandlerAcceptor* shAcceptor = new App::BlackJackServerServiceHandlerAcceptor(table, OSAL::INET::INETAddr(8888, INADDR_ANY), factory->instance());
 
-		App::ServiceHandle::BlackJackServiceHandler* serviceHandler = new App::ServiceHandle::BlackJackServiceHandler(table, 400);
-		std::cout << "Initialised" << std::endl;
-
-		std::cout << "accepting" << std::endl;
-		if(acceptor->accept(serviceHandler->peer()) == OSAL::INET::SocketAcceptor::SOCKACCOK)
-		{
-			std::cout << "accepted" << std::endl;
-		}
-		else
-		{
-			printf("createSocket failed with error: %d\n", WSAGetLastError());
-			std::cout << "error" << std::endl;
-		}
-
-		reactor->registerHandler(serviceHandler, EventHandle::Reactor::READ_EVENT);
-
-		table->addNewPlayer(serviceHandler);
-
-		/*App::ServiceHandle::BlackJackSHAcceptor* shAcceptor = new App::ServiceHandle::BlackJackSHAcceptor(*addr, reactor);
-
-		reactor->registerHandler(shAcceptor, EventHandle::Reactor::ACCEPT_EVENT);*/
+		shAcceptor->registerAcceptor();
 
 		while(true)
 		{
-			reactor->handleEvents();
+			factory->instance()->handleEvents();
 		}
 
 	}

@@ -8,22 +8,23 @@
 #ifndef INCLUDE_GAMELOGIC_DEALER_CPP_
 #define INCLUDE_GAMELOGIC_DEALER_CPP_
 
-#include <GameLogic/Deck.hpp>
-#include <GameLogic/Player.hpp>
+#include <GameLogic/IPlayer.hpp>
 
 namespace GameLogic
 {
-class Dealer
+class Dealer : public IPlayer
 {
 public:
-	Dealer();
-	void giveCard(Card* card);
-	int getCardsTotalValue();
+	/**
+	 * @brief - The destructor of the dealer object
+	 */
+	~Dealer();
+
+	/**
+	 * @brief - Returns whether or not the dealer is hitting or standing
+	 * @return - true if the dealer is hitting, false if the dealer is standing
+	 */
 	bool getIsHitting();
-	void clear();
-	std::string getCardsName();
-private:
-	std::vector<Card*> cards;
 };
 
 }

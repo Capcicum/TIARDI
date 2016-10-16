@@ -42,8 +42,23 @@ public:
 		SPADES
 	};
 
+	/**
+	 * @brief - The constructor of the Card class
+	 * @param r - The Rank of the card
+	 * @param s - The Suit of the card
+	 */
 	Card(Rank r, Suit s);
+
+	/**
+	 * @brief - Returns the value of the Card
+	 * @return - the value of the object
+	 */
 	int getValue();
+
+	/**
+	 * @brief - return the full name of the card object
+	 * @return - the card name based on the rank and suit
+	 */
 	std::string getCardName();
 private:
 	Rank rank;

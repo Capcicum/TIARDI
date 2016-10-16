@@ -15,14 +15,36 @@ namespace INET {
 
 class INETAddr {
 public:
+
+	/**
+	 *@brief - INETAddr class constructor
+	 *@param port - the port
+	 *@param addr - the IP addr
+	 */
 	INETAddr(u_int16 port, u_int32 addr);
 
+	/**
+	 *@brief - returns the port
+	 *@return - return the port
+	 */
 	u_int16 getPort() const;
 
+	/**
+	 *@brief - returns the IP addr
+	 *@return - returns the IP addr
+	 */
 	u_int32 getIPAddr() const;
 
+	/**
+	 *@brief - gets the size of the addr
+	 *@return - returns the addr of the addr
+	 */
 	u_int64 getSize() const;
 
+	/**
+	 *@brief - returns the object as an sockaddr_t
+	 *@return - return the object as an sockaddr_t
+	 */
 	sockaddr_t* getSocketAddr() const;
 
 private:

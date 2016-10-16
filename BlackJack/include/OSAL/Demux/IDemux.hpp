@@ -18,6 +18,15 @@ class IDemux
 {
 public:
 	virtual ~IDemux(){}
+
+	/**
+	 * @brief - interface takes a number of vectors with handles and return
+	 * the same vector but only with the handles that are ready
+	 * @param ioReadFds - Vector containing all handles for read
+	 * @param ioWriteFds - vector containgen all handles for write
+	 * @param ioExceptFds - Vector containing all handle for except
+	 * @param timeout - the timeout of the function
+	 */
 	virtual int handle_events(
 			std::vector<handle>& ioReadFds,
 			std::vector<handle>& ioWriteFds,

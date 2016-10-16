@@ -29,14 +29,19 @@ socket(INVALID_SOCKET)
 
 SocketAcceptor::SocketAcceptorReturn SocketAcceptor::createSocket()
 {
+	int opt = 1;
 	SocketAcceptor::SocketAcceptorReturn result = SOCKACCOK;
 	socket = ::socket(PF_INET, SOCK_STREAM, 0);
 	if(socket == INVALID_SOCKET)
 	{
 		result = getError();
 	}
-	/*unsigned long iMode = 1;
-	ioctlsocket(socket,FIONBIO,&iMode);*/
+	setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt));
+	if(socket == INVALID_SOCKET)
+	{
+		result = getError();
+	}
+
 	return result;
 }
 
